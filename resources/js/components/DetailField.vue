@@ -7,11 +7,11 @@
                     :key="group"
                     class="mb-2 pl-2 w-1/2"
                 >
-                    <div class="flex items-center px-2 py-2 bg-40 rounded-lg" @click="showItem(group)">
+                    <div class="cursor-pointer flex items-center px-2 py-2 bg-40 rounded-lg" @click="showItem(group)">
                         <h3 class="capitalize">{{ fixNaming(group) }}</h3>
                         <div class="ml-auto">
-                            <span class="cursor-pointer font-bold text-xl" v-if="activeItem === group">&minus;</span>
-                            <span class="cursor-pointer font-bold text-xl" v-else>&plus;</span>
+                            <span class="font-bold text-xl" v-if="activeItem === group">&minus;</span>
+                            <span class="font-bold text-xl" v-else>&plus;</span>
                         </div>
                     </div>
 
