@@ -9,48 +9,37 @@
           <div
               v-for="(permissions, group) in field.options"
               :key="group"
-              class="w-1/2 mb-2"
+              class="mb-2 pl-2 w-1/2"
           >
-              <h3 class="my-2 capitalize">{{ __( fixNaming(group) ) }}</h3>
-              <div
-                  v-for="(permission, option) in permissions"
-                  :key="permission.option"
-                  class="mb-2"
-              >
-                  <checkbox
-                      :value="permission.option"
-                      :checked="isChecked(permission.option)"
-                      @input="toggleOption(permission.option)"
-                      class="pr-2"
-                  ></checkbox>
-                  <label
-                      :for="field.name"
-                      v-text="fixNaming(permission.label)"
-                      @click="toggleOption(permission.option)"
-                      class="ml-2"
-                  ></label>
+
+              <div class="flex items-center px-2 py-2 bg-40 rounded-lg">
+                  <h3 class="capitalize">{{ fixNaming(group) }}</h3>
+                  <div class="ml-auto">
+                      <span class="cursor-pointer font-bold text-xl" v-if="activeItem === group" @click="showItem(group)">&minus;</span>
+                      <span class="cursor-pointer font-bold text-xl" v-else @click="showItem(group)">&plus;</span>
+                  </div>
+              </div>
+
+              <div v-show="activeItem === group" class="w-1/3 bg-20 px-2 py-2 border-l border-r border-b border-50 rounded-b-lg absolute z-50">
+                  <div
+                      v-for="(permission, option) in permissions"
+                      :key="permission.option"
+                      class="px-1 py-1 items-center"
+                  >
+                      <checkbox
+                          :value="permission.option"
+                          :checked="isChecked(permission.option)"
+                          @input="toggleOption(permission.option)"
+                          class="pr-2"
+                      ></checkbox>
+                      <label
+                          :for="field.name"
+                          v-text="fixNaming(permission.label)"
+                          @click="toggleOption(permission.option)"
+                      ></label>
+                  </div>
               </div>
           </div>
-      </div>
-      <div class="flex flex-wrap" v-else>
-        <div
-            v-for="(label, option) in field.options"
-            :key="option"
-            class="w-1/2 mb-2"
-        >
-          <checkbox
-            :value="option"
-            :checked="isChecked(option)"
-            @input="toggleOption(option)"
-            class="pr-2"
-          />
-          <label
-              :for="field.name"
-              v-text="label"
-              @click="toggleOption(option)"
-              class="ml-2"
-          ></label>
-        </div>
       </div>
       <p
           v-if="hasError"
@@ -66,7 +55,23 @@
     export default {
   mixins: [FormField, HandlesValidationErrors],
   props: ["resourceName", "resourceId", "field"],
+        data() {
+      return {
+          activeItem: null,
+      }
+        },
   methods: {
+      showItem(group) {
+          if(!this.activeItem) {
+              this.activeItem = group
+          }
+          else if(this.activeItem !== group) {
+              this.activeItem = group
+          }
+          else {
+              this.activeItem = null
+          }
+      },
     checkAll() {
       // With Groups
       if (this.field.withGroups) {
@@ -97,7 +102,7 @@
     },
     uncheck(option) {
       if (this.isChecked(option)) {
-        this.$set(this, "value", this.value.filter(item => item != option));
+        this.$set(this, "value", this.value.filter(item => item !== option));
       }
     },
     toggleOption(option) {
@@ -116,7 +121,6 @@
      * Fill the given FormData object with the field's internal value.
      */
     fill(formData) {
-      console.log(this.value);
       formData.append(this.field.attribute, this.value || []);
     },
     /**
@@ -141,18 +145,3 @@
   }
 };
 </script>
-
-<style>
-.max-col-3 {
-  -moz-column-count: 3;
-  -webkit-column-count: 3;
-  column-count: 3;
-  white-space: nowrap;
-}
-.max-col-2 {
-  -moz-column-count: 2;
-  -webkit-column-count: 2;
-  column-count: 2;
-  white-space: nowrap;
-}
-</style>

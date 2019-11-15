@@ -1,47 +1,65 @@
 <template>
     <panel-item :field="field">
-        <p slot="value" class="text-90 flex">
-            <span class="flex flex-wrap" v-if="field.withGroups">
+        <p slot="value" class="text-90">
+            <span class="flex flex-wrap">
                 <div
                     v-for="(permissions, group) in field.options"
                     :key="group"
-                    class="w-1/2 mb-2"
+                    class="mb-2 pl-2 w-1/2"
                 >
-                    <h3 class="my-2 capitalize">{{ fixNaming(group) }}</h3>
-                    <div
-                        v-for="(permission, option) in permissions"
-                        :key="option"
-                        class="flex-auto"
-                    >
-                        <span
-                            class="inline-block rounded-full w-2 h-2 mr-1"
-                            :class="optionClass(permission.option)"
-                        />
-                        <span>{{ fixNaming(permission.label) }}</span>
+                    <div class="flex items-center px-2 py-2 bg-40 rounded-lg">
+                        <h3 class="capitalize">{{ fixNaming(group) }}</h3>
+                        <div class="ml-auto">
+                            <span class="cursor-pointer font-bold text-xl" v-if="activeItem === group" @click="showItem(group)">&minus;</span>
+                            <span class="cursor-pointer font-bold text-xl" v-else @click="showItem(group)">&plus;</span>
+                        </div>
                     </div>
+
+                    <div v-show="activeItem === group" class="w-1/3 bg-20 px-2 py-2 border-l border-r border-b border-50 rounded-b-lg absolute z-50">
+                        <div
+                            v-for="(permission, option) in permissions"
+                            :key="option"
+                            class="flex-auto"
+                        >
+                            <span
+                                class="inline-block rounded-full w-2 h-2"
+                                :class="optionClass(permission.option)"></span>
+                            <span>{{ fixNaming(permission.label) }}</span>
+                        </div>
+                    </div>
+<!--                    <collapse-item :name="fixNaming(group)" :permissions="permissions" :value="field.value"></collapse-item>-->
                 </div>
             </span>
-            <span class="flex flex-wrap" v-else>
-                <div
-                v-for="(label, option) in field.options"
-                :key="option"
-                class="w-1/2 mb-2"
-                >
-                <span
-                    class="inline-block rounded-full w-2 h-2 mr-1"
-                    :class="optionClass(option)"
-                />
-                <span>{{ label }}</span>
-            </div>
-        </span>
-    </p>
-</panel-item>
+        </p>
+    </panel-item>
 </template>
 
 <script>
+    import CollapseItem from "./CollapseItem";
+
     export default {
+        components: { CollapseItem },
+
         props: ['resource', 'resourceName', 'resourceId', 'field'],
+
+        data() {
+            return {
+                activeItem: null,
+            }
+        },
+
         methods: {
+            showItem(group) {
+                if(!this.activeItem) {
+                    this.activeItem = group
+                }
+                else if(this.activeItem !== group) {
+                    this.activeItem = group
+                }
+                else {
+                    this.activeItem = null
+                }
+            },
             optionClass(option) {
                 return {
                     'bg-success': this.field.value ? this.field.value.includes(option) : false,
@@ -66,18 +84,3 @@
         }
     }
 </script>
-
-<style>
-.max-col-3 {
-    -moz-column-count: 3;
-    -webkit-column-count: 3;
-    column-count: 3;
-    white-space: nowrap;
-}
-.max-col-2 {
-    -moz-column-count: 2;
-    -webkit-column-count: 2;
-    column-count: 2;
-    white-space: nowrap;
-}
-</style>
