@@ -29,12 +29,25 @@ class RolesAndPermissionsSeeder extends Seeder
             // create permissions for each collection item
             $group_name = $this->groupName($item);
             $permission_name = $this->permissionName($item);
+            /*
             Permission::create(['group' => $group_name, 'name' => 'view own ' . $permission_name]);
             Permission::create(['group' => $group_name, 'name' => 'view ' . $permission_name]);
             Permission::create(['group' => $group_name, 'name' => 'manage own ' . $permission_name]);
             Permission::create(['group' => $group_name, 'name' => 'manage ' . $permission_name]);
             Permission::create(['group' => $group_name, 'name' => 'restore ' . $permission_name]);
             Permission::create(['group' => $group_name, 'name' => 'forceDelete ' . $permission_name]);
+            */
+            Permission::create(['group' => $group_name, 'name' => 'viewAny ' . $permission_name]);
+            Permission::create(['group' => $group_name, 'name' => 'view ' . $permission_name]);
+            Permission::create(['group' => $group_name, 'name' => 'view own ' . $permission_name]);
+            Permission::create(['group' => $group_name, 'name' => 'create ' . $permission_name]);
+            Permission::create(['group' => $group_name, 'name' => 'update ' . $permission_name]);
+            Permission::create(['group' => $group_name, 'name' => 'update own ' . $permission_name]);
+            Permission::create(['group' => $group_name, 'name' => 'delete ' . $permission_name]);
+            Permission::create(['group' => $group_name, 'name' => 'delete own ' . $permission_name]);
+            Permission::create(['group' => $group_name, 'name' => 'restore ' . $permission_name]);
+            Permission::create(['group' => $group_name, 'name' => 'forceDelete ' . $permission_name]);
+            Permission::create(['group' => $group_name, 'name' => 'forceDelete own ' . $permission_name]);
         });
 
         // Create a Super-Admin Role and assign all Permissions

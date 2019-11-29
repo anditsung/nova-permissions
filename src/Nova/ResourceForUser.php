@@ -1,8 +1,11 @@
 <?php
+
+
 namespace Eminiarts\NovaPermissions\Nova;
 
-use Laravel\Nova\Resource as NovaResource;
+use Illuminate\Http\Request;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Resource as NovaResource;
 
 abstract class ResourceForUser extends NovaResource
 {
@@ -102,5 +105,22 @@ abstract class ResourceForUser extends NovaResource
         }
 
         return $query->where('user_id', $user->id);
+    }
+
+    public static function availableForNavigation(Request $request)
+    {
+        $user = $request->user();
+
+        // Super Admin
+        if ( $user->isSuperAdmin() ) {
+            return parent::availableForNavigation($request);
+        }
+
+        // Resource available on the navigation has permission to view or view own
+        if ( $user->hasPermissionTo('viewAny '. parent::uriKey()) &&  ($user->hasPermissionTo('view own ' . parent::uriKey()) || $user->hasPermissionTo('view ' . parent::uriKey())) ) {
+            return parent::availableForNavigation($request);
+        }
+
+        return false;
     }
 }

@@ -8,7 +8,18 @@
                     class="mb-2 pl-2 w-1/2"
                 >
                     <div class="cursor-pointer flex items-center px-2 py-2 bg-40 rounded-lg" @click="showItem(group)">
-                        <h3 class="capitalize">{{ fixNaming(group) }}</h3>
+                        <div class="w-full flex items-center">
+                            <h3 class="capitalize flex-1">{{ fixNaming(group) }}</h3>
+                            <div class="flex flex-wrap">
+                                <div
+                                    v-for="(permission, option) in permissions"
+                                    :key="permission.option"
+                                    class="pr-2"
+                                >
+                                    <span class="inline-block rounded-full w-2 h-2" :class="optionClass(permission.option)"></span>
+                                </div>
+                            </div>
+                        </div>
                         <div class="ml-auto">
                             <span class="font-bold text-xl" v-if="activeItem === group">&minus;</span>
                             <span class="font-bold text-xl" v-else>&plus;</span>
