@@ -16,7 +16,7 @@
                     <div class="cursor-pointer flex items-center px-2 py-2 bg-40 rounded-lg" @click="showItem(group)">
                         <div class="w-full flex items-center">
                             <h3 class="capitalize flex-1">{{ fixNaming(group) }}</h3>
-                            <div class="flex">
+                            <div class="flex flex-wrap">
                                 <div
                                     v-for="(permission, option) in permissions"
                                     :key="permission.option"
